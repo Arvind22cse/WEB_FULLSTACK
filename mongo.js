@@ -318,7 +318,7 @@ app.get("/view", async (req, res) => {
 
         let tableContent = "<h1>Report</h1><table border='1'><tr><th>Type</th><th>No of Employees</th><th>Cost</th></tr>";
         tableContent += items.map(item => `<tr><td>${item.type}</td><td>${item.employee}</td><td>${item.price}</td></tr>`).join("");
-        tableContent += "</table><a href='/'>Back to form</a>";
+        tableContent += "</table><a href='/admin'>Back to form</a>";
 
         res.send(tableContent);
     } catch (err) {
@@ -334,7 +334,7 @@ app.get("/viewcus", async (req, res) => {
 
         let tableContent = "<h1>Report</h1><table border='1'><tr><th>Name of the customer</th><th>Email id</th><th>Type of Workers</th> <th>Quantity</th><th>Total Price</th></tr>";
         tableContent += items.map(item => `<tr><td>${item.name}</td><td>${item.email}</td><td>${item.work}</td><td>${item.quantity}</td><td>${item.totalPrice}</td></tr>`).join("");
-        tableContent += "</table><a href='/'>Back to form</a>";
+        tableContent += "</table><a href='/admin'>Back to form</a>";
 
         res.send(tableContent);
     } catch (err) {
