@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Insert Data</title>
+  <style>
+    body{
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content:center;
+      align-items: center;
+      position: relative;    
+    } 
+ 
+.container {
+  
+  opacity: 0.5;
+  position: relative;
+  width: 600px;
+
+  padding: 30px;
+  border-radius: 10px;
+  position: relative;
+
+  
+  transition: opacity 0.3s; 
+  font-family: Arial, Helvetica, sans-serif;
+  color:white;
+
+}
+#log{
+    color: rgb(252, 249, 255);
+            font-family: Algerian;
+            text-align: center;
+            text-shadow: 2px 2px #acac00;;
+}
+#sub{
+    background-color: black;
+    color: white;
+    width:70px;
+    height: 35px;
+    box-shadow: 2px 2px hsl(0, 1%, 25%);
+    border-radius: 5px;
+}
+#sub:hover{
+background-color: rgb(152, 145, 145);
+color: black;
+box-shadow: 2px 2px hsl(0, 1%, 36%);
+}
+input[type=text] {
+  width: 130px;
+  -webkit-transition: width 0.4s ease-in-out;
+  transition: width 0.4s ease-in-out;
+}
+
+input[type=text]:focus {
+  width: 100%;
+}
+
+  </style>
+</head>
+<body>
+  <img src="https://getwallpapers.com/wallpaper/full/f/3/2/23493.jpg" style="width:100%;height :100% ;object-fit:cover;position:absolute">
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const img = document.getElementById("img");
+      const container = document.querySelector(".container");
+
+      container.addEventListener("mouseenter", () => {
+        img.style.opacity = 0.9; 
+      });
+
+      container.addEventListener("mouseleave", () => {
+        img.style.opacity = 0.5;
+      });
+    });
+  </script>
+  <div class="container" style="background-image: url(https://wallpaperaccess.com/full/701499.jpg); object-fit:cover;background-repeat: no-repeat;  
+  background-attachment:fixed;background-repeat:no-repeat;width: 40%;height:auto" id="img">
+  
+  <h1 id="log">SIGN UP AS CUSTOMER</h1>
+  <form action="/signup2" method="post">
+    <label for="email">E-MAIL ID:</label>
+    <input type="text" id="email" name="email" placeholder="@gmail.com" required><br><br>
+	<label for="password">PASSWORD:</label>
+	<input type="text" name="pass" placeholder="atleast 10 digits" required><br><br>
+    <button type="submit" id="sub">SIGN UP</button>
+  
+</form>
+  
+  </div>
+</body>
+</html>

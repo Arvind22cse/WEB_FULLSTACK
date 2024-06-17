@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .butt {
+            color: rgb(255, 255, 255);
+            background-color: rgb(0, 0, 0);
+            border-radius: 5px;
+            width: 100%;
+            cursor: pointer;
+            border: none;
+            padding: 15px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 0; /* added to space out buttons */
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url("https://media.istockphoto.com/id/1169630303/photo/blue-textured-background.webp?b=1&s=170667a&w=0&k=20&c=tI2xFhXqXFqMM0IvxSYY3F7LIwv450h2ch3yD-lZ9HU=");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+            opacity: 0.7;
+            z-index: -1;
+            animation: fadeIn 2s ease-in-out;
+        }
+        
+        body {
+            margin: 0;
+            font-family: 'Roboto', Arial, Helvetica, sans-serif;
+            width: 100%;
+            height: 100vh; /* changed to vh for full viewport height */
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #282c34; /* added background color */
+        }
+        
+        #center-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 600px; /* max width for content */
+        }
+        
+        #field {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px;
+            width: 100%; /* full width */
+        }
+        
+        .legend-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="center-content">
+        <fieldset id="field">
+            <div class="legend-container">
+                <p>Employee Management</p>
+            </div>
+    <form action="/login1">
+    <button type="sumbit"  class="butt">Login as Admin</button>
+</form>
+<form action="/login">
+    <button type="sumbit"  class="butt">Login as Customer</button>
+</form>
+</fieldset>
+</div>
+</body>
+</html>
