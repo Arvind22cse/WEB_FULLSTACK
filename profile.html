@@ -1,0 +1,163 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="/labourprofile" method="post">
+    <h1>Labours personal profile</h1>
+    <label for="name">Name:</label>
+    <input type="text" name="name"><br>
+    <label for="email">Email:</label>
+    <input type="email" name="email"><br>
+    <label for="gender">Gender:</label><br>
+    <input type="radio" name="gender" value="male">Male
+    <input type="radio" name="gender" value="female">Female<br>
+    <label for="age" >Age</label>
+    <input type="number" name="age"><br>
+    <label for="phone">Phone:</label>
+    <input type="number" name="phone"><br>
+    <label for="add">Address:</label>
+    <textarea name="add" id="add"></textarea><br>
+    <label for="service">Service</label>
+    <input type="text" name="service" id="service"><br>
+    <button type="submit" >Submit</button>
+</form>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laborer Personal Details Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            color: #0e4600;
+        }
+
+        .container {
+            width: 50%;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.2em;
+            color: #007BFF;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+
+        input[type="text"], input[type="number"], input[type="email"], input[type="tel"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+        }
+
+        /* Updated submit button */
+        .button2 {
+            background-color: #008CBA;
+            color: white;
+            padding: 15px 30px; /* Increased padding for bigger size */
+            font-size: 1.2em;    /* Increased font size */
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .button2:hover {
+            background-color: #005f8b; /* Darker blue on hover */
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <form action="/labourprofile" method="post">
+    <div class="container">
+        <h1>Laborer Personal Details Form</h1>
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" name="age" required>
+            </div>
+
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender" required>
+                    <option value="" disabled selected>Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div><br>
+
+            <div class="form-group">
+                <label for="service">Service</label>
+                <select id="service" name="service" required>
+                    <option value="" disabled selected>Select Service</option>
+                    <option value="Plumber">Plumber</option>
+                    <option value="Electrician">Electrician</option>
+                    <option value="Mechanic">Mechanic</option>
+                </select>
+            </div><br>
+
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" name="location" required>
+            </div>
+
+            <div class="form-group">
+                <label for="mobile">Mobile Number</label>
+                <input type="tel" id="mobile" name="mobile" pattern="[0-9]{10}" required placeholder="Enter 10-digit mobile number">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <button class="button2" value="Submit" onclick="msg()">Submit</button>
+        </form>
+    </div>
+</form>
+    <script>
+        function msg() {
+            alert("The form is submitted!!..");
+        }
+    </script>
+
+</body>
+</html>
+

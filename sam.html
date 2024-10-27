@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laborer Personal Details Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        .container {
+            width: 50%;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Infinite Animated Heading */
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.2em;
+            color: #007BFF;
+            animation: animateHeading 5s infinite; /* Infinite animation added */
+        }
+
+        @keyframes animateHeading {
+            0% { color: #007BFF; transform: scale(1); }
+            50% { color: #FF5733; transform: scale(1.2); }
+            100% { color: #007BFF; transform: scale(1); }
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+
+        input[type="text"], input[type="number"], input[type="email"], input[type="tel"], select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 1em;
+        }
+
+        .button2 {
+            background-color: #008CBA;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .button2:hover {
+            background-color: #005f8b;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+
+
+body {
+
+  background-color: hsla(89, 43%, 51%, 0.3);
+
+  }
+
+
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Labour Personal Details Form</h1>
+        <form action="#" method="post">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" name="age" required>
+            </div>
+
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender" required>
+                    <option value="" disabled selected>Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div><br>
+
+            <div class="form-group">
+                <label for="service">Service</label>
+                <select id="service" name="service" required>
+                    <option value="" disabled selected>Select Service</option>
+                    <option value="Plumber">Plumber</option>
+                    <option value="Electrician">Electrician</option>
+                    <option value="Mechanic">Mechanic</option>
+                </select>
+            </div><br>
+
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" name="location" required>
+            </div>
+
+            <div class="form-group">
+                <label for="mobile">Mobile Number</label>
+                <input type="tel" id="mobile" name="mobile" pattern="[0-9]{10}" required placeholder="Enter 10-digit mobile number">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="button-container">
+                <button class="button2" value="Submit" onclick="msg()">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function msg() {
+            alert("The form is submitted!!..");
+        }
+    </script>
+
+</body>
+</html>
+

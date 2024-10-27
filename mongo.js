@@ -1,8 +1,9 @@
 // Required dependencies
 const express = require("express");
-const { MongoClient } = require("mongodb");
+//const { MongoClient } = require("mongodb");
 const bodyParser = require("body-parser");
 const path = require("path");
+const { MongoClient, ObjectId } = require("mongodb");
 
 // Create Express app
 const app = express();
@@ -57,241 +58,281 @@ app.get("/customer", (req, res) => {
 app.get("/error", (req, res) => {
     res.sendFile(path.join(__dirname, "error.html"));
 });
-app.get("/order", async (req, res) => {
-    try {
-       
-        const items = await db.collection("items").find().toArray();
-console.log(items);
-        // Check if work is in query parameters
-        const { work } = req.query;
-        console.log(work);
-        // Ensure work is provided in the query parameters
-        if (!work) {
-            return res.status(400).send("Work parameter is required");
-        }
-        const selected = await db.collection("items").findOne({ type: "Plumber" });
-        console.log("Selected item:", selected);
+// app.get("/labourprofile",(req,res)=>{
+//     res.sendFile(path.join(__dirname, "appoitment.html"));
+// });
+app.get("/place-order",(req,res)=>{
+    res.sendFile(path.join(__dirname, "placeorder.html"))
+})
+// app.post("/labourprofile", async (req, res) => {
+//     const { name, email, mobile, location, service,age,gender } = req.body;
+//     try {
+//         await db.collection("labourdetails").insertOne({ name, email,age,gender, mobile, location, service });
+//         res.redirect("/admin");
+//     } catch (err) {
+//         console.error("Error inserting data:", err);
+//         res.status(500).send("Failed to insert data");
+//     }
+// });
+// app.get("/labourprofile", async (req, res) => {
+// //    const laborerEmail = "labor@example.com"; // Replace with logged-in laborer's email
+
+//     try {
+        // Fetch orders for the laborer
         
-        // Find the item that matches the work type
-        const selectedItem = items.find(item => item.type === work );
+    //     let laborerOrdersHtml = `
+    //         <!DOCTYPE html>
+    //         <html lang="en">
+    //         <head>
+    //             <meta charset="UTF-8">
+    //             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    //             <title>Appointments</title>
+    //             <style>
+    //                 .order-card { background-color: #fff; padding: 20px; margin: 20px 0; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+    //                 .order-card h2 { color: #007BFF; }
+    //                 .action-btn { padding: 10px 20px; margin-right: 10px; cursor: pointer; }
+    //                 .accept-btn { background-color: #28a745; color: white; }
+    //                 .reject-btn { background-color: #dc3545; color: white; }
+    //             </style>
+    //         </head>
+    //         <body>
+    //             <h1>Appointments</h1>
+    //     `;
 
+    //     orders.forEach(order => {
+    //         laborerOrdersHtml += `
+    //             <div class="order-card">
+    //                 <h2>Customer: ${order.customerName}</h2>
+    //                 <p><strong>Service:</strong> ${order.service}</p>
+    //                 <p><strong>Date:</strong> ${order.date}</p>
+    //                 <p><strong>Time:</strong> ${order.time}</p>
+    //                 <button class="action-btn accept-btn" onclick="handleAction('${order._id}', 'accepted')">Accept</button>
+    //                 <button class="action-btn reject-btn" onclick="handleAction('${order._id}', 'rejected')">Reject</button>
+    //             </div>
+    //         `;
+    //     });
 
-console.log(selectedItem);
-        if (!selectedItem) {
-            return res.status(404).send(`No item found for work type: ${work}`);
+    //     laborerOrdersHtml += `
+    //         <script>
+    //             function handleAction(orderId, action) {
+    //                 fetch('/update-order', {
+    //                     method: 'POST',
+    //                     headers: { 'Content-Type': 'application/json' },
+    //                     body: JSON.stringify({ orderId, action })
+    //                 }).then(response => response.json())
+    //                 .then(data => { if (data.success) window.location.reload(); })
+    //                 .catch(err => console.error('Error:', err));
+    //             }
+    //         </script>
+    //         </body>
+    //         </html>
+    //     `;
+
+    //     res.send(laborerOrdersHtml);
+    // } catch (err) {
+    //     console.error("Error fetching laborer appointments:", err);
+    //     res.status(500).send("Failed to fetch appointments");
+    // }
+    app.get("/labourprofile", async (req, res) => {
+        try {
+            // Fetch data from MongoDB
+            const orders = await db.collection("appointments").find({}).toArray();
+            const customers = await db.collection("customers").find({}).toArray();
+    
+            // Log data to check if it exists
+            console.log("Orders:", orders);
+            console.log("Customers:", customers);
+    
+            // If no data found, return an error message
+            if (!orders.length || !customers.length) {
+                return res.send("<h1>No appointments or customers found</h1>");
+            }
+    
+            // Initialize HTML template
+            let customerBookingsHtml = `
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>My Appointments</title>
+                    <style>
+                        .booking-card { background-color: #fff; padding: 20px; margin: 20px 0; border-radius: 8px; }
+                        h1 { color: #007BFF; }
+                    </style>
+                </head>
+                <body>
+                    <h1>My Appointments</h1>
+            `;
+    
+            // Loop through orders and display customer data
+            orders.forEach((order, index) => {
+                const customer = customers[index];  // Assuming 1-to-1 mapping of orders and customers based on index
+    
+                if (customer) {
+                    customerBookingsHtml += `
+                        <div class="booking-card">
+                            <h2>Name: ${customer.name}</h2>
+                            <p><strong>Email:</strong> ${customer.email}</p>
+                            <p><strong>Mobile:</strong> ${customer.mobile}</p>
+                            <p><strong>Location:</strong> ${customer.loc}</p>
+                        </div>
+                    `;
+                } else {
+                    customerBookingsHtml += `<p>No customer data for this order</p>`;
+                }
+            });
+    
+            // Close HTML template
+            customerBookingsHtml += "</body></html>";
+    
+            // Send the rendered HTML
+            res.send(customerBookingsHtml);
+    
+        } catch (err) {
+            console.error("Error fetching customer bookings:", err);
+            res.status(500).send("Failed to fetch bookings");
         }
+    });
+    
+app.post("/update-order", async (req, res) => {
+    const { orderId, action } = req.body;
 
-        // Construct the HTML response dynamically with fetched items
-        let tableContent = `
+    try {
+        await db.collection("orders").updateOne(
+            { _id: new MongoClient.ObjectId(orderId) },
+            { $set: { status: action } }
+        );
+
+        res.json({ success: true });
+    } catch (err) {
+        console.error("Error updating order:", err);
+        res.status(500).json({ success: false });
+    }
+});
+app.get("/customer/bookings", async (req, res) => {
+    //const customerEmail = "john@example.com"; // Replace with logged-in customer's email
+
+    try {
+        const orders = await db.collection("appointments").find({}).toArray();
+        const data=await db.collection("customers").find({}).toArray();
+        let customerBookingsHtml = `
             <!DOCTYPE html>
             <html lang="en">
             <head>
                 <meta charset="UTF-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Order Employee</title>
-                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+                <title>My Bookings</title>
                 <style>
-                    body {
-                        background-color: rgb(74, 82, 112);
-                        color: white;
-                    }
-                    .container {
-                        background-color: rgba(0, 0, 0, 0.8);
-                        border-radius: 10px;
-                        padding: 20px;
-                        margin-top: 50px;
-                    }
-                    .btn-order {
-                        background-color: #007bff;
-                        color: white;
-                    }
-                    .btn-order:hover {
-                        background-color: blue;
-                        color: white;
-                    }
+                    .booking-card { background-color: #fff; padding: 20px; margin: 20px 0; border-radius: 8px; }
+                </style>
+            </head>
+            <body>
+                <h1>My Bookings</h1>
+        `;
+
+        orders.forEach(order => {
+            customerBookingsHtml += `
+                <div class="booking-card">
+                    <h2>Name:${data.name}</h2>
+                    <p><strong>Email:</strong> ${data.email}</p>
+                    <p><strong>Mobile:</strong> ${data.mobile}</p>
+                    <p><strong>location:</strong> ${data.loc}</p>
+                </div>
+            `;
+        });
+    
+        customerBookingsHtml += "</body></html>";
+
+        res.send(customerBookingsHtml);
+    } catch (err) {
+        console.error("Error fetching customer bookings:", err);
+        res.status(500).send("Failed to fetch bookings");
+    }
+});
+
+app.get("/order", async (req, res) => {
+    const workType = req.query.work; // Get selected work type from customer page
+
+    try {
+        // Query the database for laborers with the selected service
+        const laborers = await db.collection("labdetails").find({ service: workType }).toArray();
+        
+        // Generate HTML to display the laborer cards
+        let laborProfilesHtml = `
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>${workType} Laborers</title>
+                <style>
+                    body { background-color: #f2f2f2; color: #333; font-family: Arial, sans-serif; }
+                    .container { width: 80%; margin: 20px auto; text-align: center; }
+                    .labour-card { background-color: #fff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); margin: 20px 0; padding: 20px; text-align: left; }
+                    .labour-card h2 { color: #007BFF; }
+                    .select-btn { background-color: #007BFF; color: white; padding: 10px; text-decoration: none; border-radius: 5px; }
                 </style>
             </head>
             <body>
                 <div class="container">
-                    <h1>Order Employee</h1>
-                    <form action="/place-order" method="post" onsubmit="return sub()">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Name:</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email:</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="work" class="form-label">Employee Type:</label>
-                            <select class="form-control" id="work" name="work" required>
-                                <option value="${selectedItem.type}">${selectedItem.type}</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="price" class="form-label">Price per Employee:</label>
-                            <select class="form-control" id="price" name="price" required>
-                                <option value="${selectedItem.price}">${selectedItem.price}</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="emp" class="form-label">Available Employees:</label>
-                            <input type="hidden" id="availableEmployees" value="${selectedItem.employee}">
-                            <select class="form-control" id="emp" name="emp" required>
-                                <option value="${selectedItem.employee}">${selectedItem.employee}</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="quantity" class="form-label">Number of Employees:</label>
-                            <input type="number" class="form-control" id="quantity" name="quantity" required>
-                        </div>
-                        <button type="submit" class="btn btn-order">Place Order</button>
-                    </form>
-                    <p id="error-message" style="color: red; display: none;">Order cannot be placed. Insufficient available employees.</p>
+                    <h1>Select a ${workType}</h1>
+        `;
+
+        // Loop through the laborers and create a card for each
+        laborers.forEach(laborer => {
+            laborProfilesHtml += `
+                <div class="labour-card">
+                    <h2>${laborer.name}</h2>
+                    <p><strong>Age:</strong> ${laborer.age}</p>
+                    <p><strong>Gender:</strong> ${laborer.gender}</p>
+                    <p><strong>Occupation:</strong> ${laborer.service}</p>
+                    <p><strong>Location:</strong> ${laborer.loc}</p>
+                    <a href="/place-order?laborer=${laborer._id}" class="select-btn">Book</a>
                 </div>
-                <script>
-                    function sub() {
-                        const availableEmployees = parseInt(document.getElementById("availableEmployees").value);
-                        const requestedQuantity = parseInt(document.getElementById("quantity").value);
+            `;
+        });
 
-                        if (requestedQuantity > availableEmployees) {
-                            document.getElementById("error-message").style.display = "block";
-                            return false;
-                        }
-
-                        return true;
-                    }
-                </script>
+        laborProfilesHtml += `
+                </div>
             </body>
             </html>
         `;
 
-        res.send(tableContent);
+        // Send the constructed HTML response
+        res.send(laborProfilesHtml);
     } catch (err) {
-        console.error("Error retrieving data from MongoDB:", err);
-        res.status(500).send("Failed to fetch data from MongoDB");
+        console.error("Error retrieving labor profiles:", err);
+        res.status(500).send("Failed to fetch labor profiles");
     }
 });
 
 
-
-
 app.post("/place-order", async (req, res) => {
-    const { name, email, work, price, quantity } = req.body;
-    const totalPrice = price * quantity;
+    const { time } = req.body; // Now using req.body for POST request
 
-    if (!db) {
-        res.status(500).send("Database not initialized");
-        return;
-    }
-    
     try {
-        await db.collection("orders").insertOne({ name, email, work, price, quantity, totalPrice });
-        res.send(`
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Order Placed</title>
-                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-                <style>
-                    body {
-                        background-color: rgb(74, 82, 112);
-                        color: white;
-                    }
-                    .container {
-                        background-color: rgba(0, 0, 0, 0.8);
-                        border-radius: 10px;
-                        padding: 20px;
-                        margin-top: 50px;
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <h1>Order Placed</h1>
-                    <p>Thank you for your order, ${name}. Your order for ${quantity} ${work} is total of rs.${totalPrice}</p>
-                    <a href="/customer" class="btn btn-primary">Back to Home</a>
-                </div>
-            </body>
-            </html>
-        `);
+        // Store order details in the database
+        await db.collection("appointments").insertOne({
+            time,
+            // Add other relevant details here
+        });
+
+        // Respond with success or redirect
+        res.send("Order placed successfully!");
     } catch (err) {
         console.error("Error placing order:", err);
         res.status(500).send("Failed to place order");
     }
 });
 
-// Route to handle order approval by admin
-app.get("/admin/orders", async (req, res) => {
-    try {
-        const orders = await db.collection("orders").find({ status: "Pending" }).toArray();
-        let tableContent = "<h1>Pending Orders</h1><table border='1'><tr><th>Name</th><th>Email</th><th>Employee Type</th><th>Quantity</th><th>Total Price</th><th>Action</th></tr>";
-        tableContent += orders.map(order => `
-            <tr>
-                <td>${order.name}</td>
-                <td>${order.email}</td>
-                <td>${order.work}</td>
-                <td>${order.quantity}</td>
-                <td>₹${order.totalPrice}</td>
-                <td>
-                    <form action="/admin/approve-order" method="post" style="display:inline;">
-                        <input type="hidden" name="id" value="${order._id}">
-                        <input type="hidden" name="work" value="${order.work}">
-                        <input type="hidden" name="quantity" value="${order.quantity}">
-                        <button type="submit" class="btn btn-success">Approve</button>
-                    </form>
-                    <form action="/admin/reject-order" method="post" style="display:inline;">
-                        <input type="hidden" name="id" value="${order._id}">
-                        <button type="submit" class="btn btn-danger">Reject</button>
-                    </form>
-                </td>
-            </tr>`).join("");
-        tableContent += "</table><a href='/admin'>Back to Admin Home</a>";
 
-        res.send(tableContent);
-    } catch (err) {
-        console.error("Error fetching orders:", err);
-        res.status(500).send("Failed to fetch orders");
-    }
-});
 
-app.post("/admin/approve-order", async (req, res) => {
-    const { id, work, quantity } = req.body;
+// app.post("/update",async(req,res)=>{
 
-    if (!db) {
-        res.status(500).send("Database not initialized");
-        return;
-    }
     
-    try {
-        const result = await db.collection("orders").updateOne({ _id: new MongoClient.ObjectID(id) }, { $set: { status: "Approved" } });
-        await db.collection("items").updateOne({ type: work }, { $inc: { employee: -quantity } });
-        res.redirect("/admin/orders");
-    } catch (err) {
-        console.error("Error approving order:", err);
-        res.status(500).send("Failed to approve order");
-    }
-});
 
-app.post("/admin/reject-order", async (req, res) => {
-    const { id } = req.body;
-
-    if (!db) {
-        res.status(500).send("Database not initialized");
-        return;
-    }
-    
-    try {
-        const result = await db.collection("orders").updateOne({ _id: new MongoClient.ObjectID(id) }, { $set: { status: "Rejected" } });
-        res.redirect("/admin/orders");
-    } catch (err) {
-        console.error("Error rejecting order:", err);
-        res.status(500).send("Failed to reject order");
-    }
-});
+// });
 
 // Route to handle form submission and insert data into MongoDB
 app.post("/insert", async (req, res) => {
@@ -313,7 +354,7 @@ app.post("/insert", async (req, res) => {
 // Endpoint to retrieve and display a simple report from MongoDB
 app.get("/view", async (req, res) => {
     try {
-        const items = await db.collection("items").find().toArray();
+        const items = await db.collection("appoitment").find().toArray();
         console.log(items);
 
         let tableContent = "<h1>Report</h1><table border='1'><tr><th>Type</th><th>No of Employees</th><th>Cost</th></tr>";
@@ -344,19 +385,16 @@ app.get("/viewcus", async (req, res) => {
 });
 
 app.post("/signup", async (req, res) => {
-    const { email, pass } = req.body;
-    if (!db) {
-        res.status(500).send("Database not initialized"); 
-        return;
-    }
+   // const { email, pass } = req.body;
+    const { name, email, pass,mobile, loc, service,age,gender } = req.body;
     try {
-        await db.collection("ad").insertOne({ email, pass });
-        console.log("User inserted successfully");
-        res.redirect("/login1"); 
+        await db.collection("labdetails").insertOne({ name, email,pass,age,gender, mobile, loc, service });
+        res.redirect("/login");
     } catch (err) {
-        console.error("Error inserting user data:", err);
-        res.status(500).send("Failed to sign up");
+        console.error("Error inserting data:", err);
+        res.status(500).send("Failed to insert data");
     }
+   
 });
 
 
@@ -369,48 +407,7 @@ app.post("/login1", async (req, res) => {
     }
     try {
         
-        if (await db.collection("ad").findOne({email,pass})) {
-            console.log("User authenticated successfully");
-            
-            res.redirect("/admin"); 
-        } else {
-            console.log("Authentication failed");
-            res.redirect("/error"); 
-        }
-    }
-    catch (err) {
-        console.error("Error during authentication:", err);
-        res.status(500).send("Failed to login");
-    }
-});
-
-app.post("/signup2", async (req, res) => {
-    const { email, pass } = req.body;
-    if (!db) {
-        res.status(500).send("Database not initialized"); 
-        return;
-    }
-    try {
-        await db.collection("cus").insertOne({ email, pass });
-        console.log("User inserted successfully");
-        res.redirect("/login"); 
-    } catch (err) {
-        console.error("Error inserting user data:", err);
-        res.status(500).send("Failed to sign up");
-    }
-});
-
-
-app.post("/login", async (req, res) => {
-    
-    const { email, pass } = req.body;
-    if (!db) {
-        res.status(500).send("Database not initialized"); 
-        return;
-    }
-    try {
-        
-        if (await db.collection("cus").findOne({email,pass})) {
+        if (await db.collection("customers").findOne({email,pass})) {
             console.log("User authenticated successfully");
             
             res.redirect("/customer"); 
@@ -424,6 +421,48 @@ app.post("/login", async (req, res) => {
         res.status(500).send("Failed to login");
     }
 });
+
+app.post("/signup2", async (req, res) => {
+    //const { email, pass } = req.body;
+    const { name, email, pass,mobile, loc} = req.body;
+    try {
+        await db.collection("customers").insertOne({ name, email,pass,mobile, loc });
+        res.redirect("/login1");
+    } catch (err) {
+        console.error("Error inserting data:", err);
+        res.status(500).send("Failed to insert data");
+    }
+  
+});
+
+
+app.post("/login", async (req, res) => {
+    
+    const { email, pass } = req.body;
+    if (!db) {
+        res.status(500).send("Database not initialized"); 
+        return;
+    }
+    try {
+        
+        if (await db.collection("labdetails").findOne({email,pass})) {
+            console.log("User authenticated successfully");
+            
+            res.redirect("/labourprofile"); 
+        } else {
+            console.log("Authentication failed");
+            res.redirect("/error"); 
+        }
+    }
+    catch (err) {
+        console.error("Error during authentication:", err);
+        res.status(500).send("Failed to login");
+    }
+});
+// app.post("/admin",async(req,res)=>{
+//     const {type,employee,price}=req.body;
+
+// })
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);

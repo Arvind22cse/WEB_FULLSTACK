@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            width: 60%;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #007BFF;
+        }
+        p {
+            line-height: 1.6;
+        }
+        .order-details {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Appointment Confirmation</h1>
+        <p>Thank you for placing an order. Here are the details of your appointment:</p>
+        <div class="order-details">
+            <p><strong>Customer Name:</strong> <span id="customerName"></span></p>
+            <p><strong>Email:</strong> <span id="customerEmail"></span></p>
+            <p><strong>Laborer:</strong> <span id="laborerName"></span></p>
+            <p><strong>Date:</strong> <span id="appointmentDate"></span></p>
+            <p><strong>Time:</strong> <span id="appointmentTime"></span></p>
+        </div>
+    </div>
+<!-- 
+    <script>
+        // Get the query parameters from the URL
+        //const params = new URLSearchParams(window.location.search);
+        
+        // Set the values on the page
+        document.getElementById('customerName').textContent = params.get('name');
+        document.getElementById('customerEmail').textContent = params.get('email');
+        document.getElementById('laborerName').textContent = params.get('laborer');
+        document.getElementById('appointmentDate').textContent = params.get('date');
+        document.getElementById('appointmentTime').textContent = params.get('time');
+    </script> -->
+</body>
+</html>

@@ -62,7 +62,7 @@ input[type=text]:focus {
   </style>
 </head>
 <body>
-  <img src="https://getwallpapers.com/wallpaper/full/f/3/2/23493.jpg" style="width:100%;height :100% ;object-fit:cover;position:absolute">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRl49DY9kThlR4p2Uh2VQeVw6Wl-u4atgPnDQ&s" style="width:100%;height :100% ;object-fit:cover;position:absolute">
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const img = document.getElementById("img");
@@ -80,12 +80,22 @@ input[type=text]:focus {
   <div class="container" style="background-image: url(https://wallpaperaccess.com/full/701499.jpg); object-fit:cover;background-repeat: no-repeat;  
   background-attachment:fixed;background-repeat:no-repeat;width: 40%;height:auto" id="img">
   
-  <h1 id="log">SIGN UP AS CUSTOMER</h1>
+  <h1 id="log">SIGN UP AS USER</h1>
   <form action="/signup2" method="post">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" ><br><br>
+
     <label for="email">E-MAIL ID:</label>
     <input type="text" id="email" name="email" placeholder="@gmail.com" required><br><br>
-	<label for="password">PASSWORD:</label>
+	<label for="password">Set PASSWORD:</label>
 	<input type="text" name="pass" placeholder="atleast 10 digits" required><br><br>
+	<label for="loc">Address:</label>
+  <textarea name="loc" id="loc"></textarea><br><br>
+ 
+<div class="form-group">
+  <label for="mobile">Mobile Number</label>
+  <input type="tel" id="mobile" name="mobile" pattern="[0-9]{10}" required placeholder="Enter 10-digit mobile number">
+</div>
     <button type="submit" id="sub">SIGN UP</button>
   
 </form>
