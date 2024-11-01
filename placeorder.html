@@ -5,10 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+<style>
+    /* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+}
+h1{
+    text-align: center;
+    
+}
+form {
+    background-color: #fff;
+    max-width: 400px;
+    width: 100%;
+    padding: 2em;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Label Styles */
+label {
+    display: block;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 0.5em;
+}
+
+/* Input and Button Styles */
+input[type="text"],
+input[type="email"],
+input[type="datetime-local"],
+input[type="number"] {
+    width: 100%;
+    padding: 0.75em;
+    margin-bottom: 1.5em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="datetime-local"]:focus,
+input[type="number"]:focus {
+    border-color: #4a90e2;
+    outline: none;
+}
+
+/* Submit Button */
+button[type="submit"] {
+    width: 100%;
+    padding: 0.75em;
+    background-color: #4a90e2;
+    color: #fff;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+    background-color: #357ab8;
+}
+
+</style>
 <body>
     <form action="/place-order" method="post">
+        <h1>Place Appointment</h1>
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="name">
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email">
         <label for="appointmentTime">Select Appointment Time:</label>
         <input type="datetime-local" name="time" required>
+       <label for="add"> Address:</label>
+        <input type="text" name="add" id="add">
+        <label for="mob">Mobile No:</label>
+        <input type="number" name="mob" id="mob">
+
         <button type="submit">Confirm Order</button>
     </form>
     

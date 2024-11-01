@@ -137,15 +137,13 @@ app.get("/place-order",(req,res)=>{
         try {
             // Fetch data from MongoDB
             const orders = await db.collection("appointments").find({}).toArray();
-            const customers = await db.collection("customers").find({}).toArray();
-    
+            
             // Log data to check if it exists
             console.log("Orders:", orders);
-            console.log("Customers:", customers);
-    
+        
             // If no data found, return an error message
-            if (!orders.length || !customers.length) {
-                return res.send("<h1>No appointments or customers found</h1>");
+            if (!orders.length) {
+                return res.send("<h1>No appointments found</h1>");
             }
     
             // Initialize HTML template
@@ -159,32 +157,53 @@ app.get("/place-order",(req,res)=>{
                     <style>
                         .booking-card { background-color: #fff; padding: 20px; margin: 20px 0; border-radius: 8px; }
                         h1 { color: #007BFF; }
+                        .action-btn { padding: 10px 20px; margin-right: 10px; cursor: pointer; }
+                        .accept-btn { background-color: #28a745; color: white; }
+                        .reject-btn { background-color: #dc3545; color: white; }
                     </style>
                 </head>
                 <body>
                     <h1>My Appointments</h1>
             `;
     
-            // Loop through orders and display customer data
-            orders.forEach((order, index) => {
-                const customer = customers[index];  // Assuming 1-to-1 mapping of orders and customers based on index
-    
-                if (customer) {
-                    customerBookingsHtml += `
-                        <div class="booking-card">
-                            <h2>Name: ${customer.name}</h2>
-                            <p><strong>Email:</strong> ${customer.email}</p>
-                            <p><strong>Mobile:</strong> ${customer.mobile}</p>
-                            <p><strong>Location:</strong> ${customer.loc}</p>
-                        </div>
-                    `;
-                } else {
-                    customerBookingsHtml += `<p>No customer data for this order</p>`;
-                }
+            // Loop through orders and display each appointment
+            orders.forEach(order => {
+                customerBookingsHtml += `
+                    <div class="booking-card">
+                        <h2>Name: ${order.name}</h2>
+                        <p><strong>Email:</strong> ${order.email}</p>
+                        <p><strong>Mobile:</strong> ${order.mob}</p>
+                        <p><strong>Location:</strong> ${order.add}</p>
+                        <p><strong>Time:</strong> ${order.time}</p>
+                        <button class="action-btn accept-btn" onclick="updateOrderStatus('${order._id}', 'accepted')">Accept</button>
+                        <button class="action-btn reject-btn" onclick="updateOrderStatus('${order._id}', 'rejected')">Reject</button>
+                    </div>
+                `;
             });
     
-            // Close HTML template
-            customerBookingsHtml += "</body></html>";
+            customerBookingsHtml += `
+                <script>
+                    function updateOrderStatus(orderId, status) {
+                        fetch('/update-order-status', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ orderId, status })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Order status updated successfully');
+                                location.reload(); // Refresh the page to show the updated status
+                            } else {
+                                alert('Failed to update order status');
+                            }
+                        })
+                        .catch(err => console.error('Error:', err));
+                    }
+                </script>
+                </body>
+                </html>
+            `;
     
             // Send the rendered HTML
             res.send(customerBookingsHtml);
@@ -194,6 +213,7 @@ app.get("/place-order",(req,res)=>{
             res.status(500).send("Failed to fetch bookings");
         }
     });
+    
     
 app.post("/update-order", async (req, res) => {
     const { orderId, action } = req.body;
@@ -233,14 +253,38 @@ app.get("/customer/bookings", async (req, res) => {
 
         orders.forEach(order => {
             customerBookingsHtml += `
+           
                 <div class="booking-card">
                     <h2>Name:${data.name}</h2>
                     <p><strong>Email:</strong> ${data.email}</p>
                     <p><strong>Mobile:</strong> ${data.mobile}</p>
                     <p><strong>location:</strong> ${data.loc}</p>
-                </div>
+              <button onclick="updateOrderStatus('${order._id}', 'accepted')">Accept</button>
+<button onclick="updateOrderStatus('${order._id}', 'rejected')">Reject</button>
+</div>
+<script>
+    function updateOrderStatus(orderId, status) {
+        fetch('/update-order-status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderId, status })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Order status updated successfully');
+                location.reload(); // Refresh the page to show the updated status
+            } else {
+                alert('Failed to update order status');
+            }
+        })
+        .catch(err => console.error('Error:', err));
+    }
+</script>
+
             `;
         });
+
     
         customerBookingsHtml += "</body></html>";
 
@@ -250,6 +294,25 @@ app.get("/customer/bookings", async (req, res) => {
         res.status(500).send("Failed to fetch bookings");
     }
 });
+app.post("/update-order-status", async (req, res) => {
+    const { orderId, status } = req.body;
+
+    try {
+        // Update status and message in the "appointments" collection
+        await db.collection("appointments").updateOne(
+            { _id: new ObjectId(orderId) },
+            { $set: { status, message: `Order ${status} successfully` } }
+        );
+
+        res.json({ success: true });
+    } catch (err) {
+        console.error("Error updating order status:", err);
+        res.status(500).json({ success: false });
+    }
+});
+
+
+
 
 app.get("/order", async (req, res) => {
     const workType = req.query.work; // Get selected work type from customer page
@@ -309,12 +372,16 @@ app.get("/order", async (req, res) => {
 
 
 app.post("/place-order", async (req, res) => {
-    const { time } = req.body; // Now using req.body for POST request
-
+    const { time,add,mob,email,name } = req.body; // Now using req.body for POST request
+              
     try {
         // Store order details in the database
         await db.collection("appointments").insertOne({
+            email,
+            name,
             time,
+            add,
+            mob
             // Add other relevant details here
         });
 
@@ -424,9 +491,9 @@ app.post("/login1", async (req, res) => {
 
 app.post("/signup2", async (req, res) => {
     //const { email, pass } = req.body;
-    const { name, email, pass,mobile, loc} = req.body;
+    const { name, email, pass} = req.body;
     try {
-        await db.collection("customers").insertOne({ name, email,pass,mobile, loc });
+        await db.collection("customers").insertOne({ name, email,pass });
         res.redirect("/login1");
     } catch (err) {
         console.error("Error inserting data:", err);
